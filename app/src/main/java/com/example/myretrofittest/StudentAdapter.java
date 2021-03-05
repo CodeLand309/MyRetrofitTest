@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -21,7 +22,7 @@ import java.util.List;
 public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentViewHolder> {
     private List<Student> mStudentList;
     private Context mContext;
-    String url;
+    String url="http://192.168.29.202:5000/image/";
     public static class StudentViewHolder extends RecyclerView.ViewHolder {
         public TextView mTextView1;
         public TextView mTextView2;
@@ -53,30 +54,28 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
         Student currentItem = mStudentList.get(position);
         holder.mTextView1.setText(Integer.toString(currentItem.getRoll()));
         holder.mTextView2.setText(currentItem.getName());
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                byte[] imageBytes = Base64.decode(currentItem.getImage(), Base64.DEFAULT);
-                Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                decodedImage.compress(Bitmap.CompressFormat.JPEG,100, byteArrayOutputStream);
-                holder.mImageView.post(new Runnable(){
-                    @Override
-                    public void run(){
-                        holder.mImageView.setImageBitmap(decodedImage);
-                    }
-                });
-            }
-        };
-        Thread mythread = new Thread(runnable);
-        mythread.start();
+//        Runnable runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                byte[] imageBytes = Base64.decode(currentItem.getImage(), Base64.DEFAULT);
+//                Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+//                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//                decodedImage.compress(Bitmap.CompressFormat.JPEG,100, byteArrayOutputStream);
+//                holder.mImageView.post(new Runnable(){
+//                    @Override
+//                    public void run(){
+//                        holder.mImageView.setImageBitmap(decodedImage);
+//                    }
+//                });
+//            }
+//        };
+//        Thread mythread = new Thread(runnable);
+//        mythread.start();
 
-
-        //Picasso.get().load(decodedIma).into(holder.mImageView);
-//        url = currentItem.getImage();
-//        Picasso.get().load(url).fit().centerInside().into(holder.mImageView);
-        //Glide.with(mContext).load(url).centerCrop().into(holder.mImageView);
-        //holder.mImageView.setImageBitmap(decodedImage);
+        url += currentItem.getName();
+        Picasso.get().load(url).fit().centerInside().into(holder.mImageView);
+//        Glide.with(mContext).load(url).into(holder.mImageView);
+        url = "http://192.168.29.202:5000/image/";
     }
     @Override
     public int getItemCount() {
@@ -84,11 +83,6 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
             return mStudentList.size();
         return 0;
     }
-//    public Bitmap getBitmap(String image_string){
-//        byte [] imageBytes = Base64.decode(image_string, Base64.DEFAULT);
-//        Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-//        return decodedImage;
-//    }
 
     public void addStudent(List<Student> students){
         for(Student stud : students){
